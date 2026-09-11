@@ -1,0 +1,21 @@
+{
+  "include": ["bin/**/*.js", "scripts/**/*.js", "test/**/*.js"],
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "checkJs": true,
+    "allowJs": true,
+    "outDir": "dist-cli",
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

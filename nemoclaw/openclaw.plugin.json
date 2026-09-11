@@ -1,0 +1,22 @@
+{
+  "name": "nemoclaw",
+  "displayName": "NemoClaw",
+  "version": "0.1.0",
+  "description": "NemoClaw integration plugin for OpenClaw",
+  "main": "./dist/index.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "nemoclaw",
+        "description": "NemoClaw management commands"
+      }
+    ],
+    "inferenceProviders": [
+      {
+        "id": "nemoclaw-nvidia",
+        "label": "NVIDIA Nemotron (via NemoClaw)",
+        "baseUrl": "inference.local"
+      }
+    ]
+  }
+}

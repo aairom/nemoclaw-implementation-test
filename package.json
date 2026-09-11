@@ -1,0 +1,65 @@
+{
+  "name": "nemoclaw",
+  "version": "0.1.0",
+  "description": "NVIDIA NemoClaw: Reference Stack for Sandboxed AI Agents in OpenShell",
+  "license": "Apache-2.0",
+  "author": "NVIDIA Corporation",
+  "homepage": "https://docs.nvidia.com/nemoclaw/latest/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NVIDIA/NemoClaw.git"
+  },
+  "engines": {
+    "node": ">=22.16.0",
+    "npm": ">=10.0.0"
+  },
+  "type": "commonjs",
+  "bin": {
+    "nemoclaw": "./bin/nemoclaw.js"
+  },
+  "main": "./bin/nemoclaw.js",
+  "scripts": {
+    "build": "cd nemoclaw && npm run build && cd ..",
+    "test": "vitest run",
+    "test:plugin": "cd nemoclaw && npm test",
+    "test:all": "vitest run",
+    "test:watch": "vitest --watch",
+    "typecheck:cli": "tsc --project tsconfig.cli.json --noEmit",
+    "lint": "eslint bin/ scripts/ --ext .js",
+    "format": "prettier --write \"bin/**/*.js\" \"scripts/**/*.js\"",
+    "check": "npm run lint && npm run typecheck:cli && npm test",
+    "docs": "echo 'Build docs with Sphinx/MyST'",
+    "start": "node bin/nemoclaw.js",
+    "dev": "nodemon bin/nemoclaw.js"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1",
+    "inquirer": "^8.2.6",
+    "dotenv": "^16.4.5",
+    "js-yaml": "^4.1.0",
+    "node-fetch": "^2.7.0",
+    "semver": "^7.6.3",
+    "winston": "^3.14.2",
+    "execa": "^5.1.1",
+    "conf": "^10.2.0",
+    "table": "^6.8.2",
+    "boxen": "^5.1.2",
+    "cli-progress": "^3.12.0",
+    "ip-cidr": "^3.1.0",
+    "is-ip": "^3.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.12.0",
+    "prettier": "^3.3.3",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3",
+    "@types/node": "^22.7.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/semver": "^7.5.8",
+    "sinon": "^19.0.2"
+  }
+}

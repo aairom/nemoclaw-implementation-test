@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# Discord integration policy preset
+
+version: "1"
+name: "discord"
+description: "Allows Discord API egress for bot integrations"
+
+egress:
+  - host: discord.com
+    port: 443
+    protocol: https
+    comment: "Discord API"
+
+  - host: discordapp.com
+    port: 443
+    protocol: https
+    comment: "Discord legacy endpoint"
+
+  - host: gateway.discord.gg
+    port: 443
+    protocol: https
+    comment: "Discord gateway"
+
+  - host: cdn.discordapp.com
+    port: 443
+    protocol: https
+    comment: "Discord CDN"

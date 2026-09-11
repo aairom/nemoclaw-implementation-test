@@ -1,0 +1,89 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# OpenClaw sandbox baseline network policy
+# Applied at sandbox creation. Hot-reloadable (network layer).
+# Unapproved egress is blocked; blocked requests surface in the TUI for operator approval.
+
+version: "1"
+name: "openclaw-sandbox"
+description: "Default network egress policy for OpenClaw sandboxes"
+
+# ─── Egress rules (allowed outbound connections) ──────────────────────────────
+egress:
+  # Inference endpoint (managed by OpenShell gateway)
+  - host: inference.local
+    port: 443
+    protocol: https
+    comment: "NemoClaw managed inference (routed to configured provider)"
+
+  # npm package registry
+  - host: registry.npmjs.org
+    port: 443
+    protocol: https
+    comment: "npm package index"
+
+  # Python package indexes
+  - host: pypi.org
+    port: 443
+    protocol: https
+    comment: "Python Package Index"
+
+  - host: files.pythonhosted.org
+    port: 443
+    protocol: https
+    comment: "PyPI file downloads"
+
+  # Source control
+  - host: github.com
+    port: 443
+    protocol: https
+    comment: "GitHub"
+
+  - host: raw.githubusercontent.com
+    port: 443
+    protocol: https
+    comment: "GitHub raw content"
+
+  # NVIDIA
+  - host: api.ngc.nvidia.com
+    port: 443
+    protocol: https
+    comment: "NVIDIA NGC API"
+
+  - host: ghcr.io
+    port: 443
+    protocol: https
+    comment: "GitHub Container Registry"
+
+  # DNS resolution
+  - host: "1.1.1.1"
+    port: 53
+    protocol: udp
+    comment: "Cloudflare DNS"
+
+  - host: "8.8.8.8"
+    port: 53
+    protocol: udp
+    comment: "Google DNS"
+
+# ─── Explicit deny rules ──────────────────────────────────────────────────────
+deny:
+  # Block cloud metadata endpoints (prevent SSRF)
+  - host: "169.254.169.254"
+    port: 80
+    protocol: http
+    reason: "AWS/GCP IMDS metadata endpoint"
+
+  - host: metadata.google.internal
+    port: 80
+    protocol: http
+    reason: "GCP metadata endpoint"
+
+  # Block all private RFC 1918 ranges at default (specific exceptions require explicit egress rules)
+  - cidr: "10.0.0.0/8"
+    comment: "Private RFC 1918 Class A"
+  - cidr: "172.16.0.0/12"
+    comment: "Private RFC 1918 Class B"
+  - cidr: "192.168.0.0/16"
+    comment: "Private RFC 1918 Class C"

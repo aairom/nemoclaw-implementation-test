@@ -1,0 +1,29 @@
+{
+  "name": "@nvidia/nemoclaw-plugin",
+  "version": "0.1.0",
+  "description": "NemoClaw TypeScript plugin for OpenClaw integration",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest",
+    "lint": "eslint src/ --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "semver": "^7.6.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/node": "^22.7.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/semver": "^7.5.8",
+    "vitest": "^2.1.8",
+    "eslint": "^9.12.0"
+  }
+}

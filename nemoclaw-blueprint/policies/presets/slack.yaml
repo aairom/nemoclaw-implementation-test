@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# Slack integration policy preset
+# Add to a sandbox with: nemoclaw policy add slack (applies this preset)
+
+version: "1"
+name: "slack"
+description: "Allows Slack API egress for messaging integrations"
+
+egress:
+  - host: slack.com
+    port: 443
+    protocol: https
+    comment: "Slack API"
+
+  - host: api.slack.com
+    port: 443
+    protocol: https
+    comment: "Slack API endpoint"
+
+  - host: slack-files.com
+    port: 443
+    protocol: https
+    comment: "Slack file uploads"
+
+  - host: "*.slack.com"
+    port: 443
+    protocol: https
+    comment: "Slack subdomains"

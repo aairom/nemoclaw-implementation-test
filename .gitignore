@@ -1,0 +1,90 @@
+# NemoClaw - .gitignore
+# =====================
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Folders starting with underscore
+_*/
+_sources/
+_images/
+_docs/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn/
+
+# Build artifacts
+dist/
+build/
+nemoclaw/dist/
+nemoclaw/node_modules/
+*.js.map
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.Python
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Binary / model artifacts
+*.onnx
+*.onnx.data
+*.tgz
+*.tar.gz
+*.zip
+*.dylib
+*.so
+
+# Playwright
+.playwright-mcp/
+playwright-report/
+test-results/
+
+# Input/Output content (keep folders, not content)
+input/*
+!input/.gitkeep
+output/*
+!output/.gitkeep
+
+# Bob
+AGENTS.md
+.bob/mcp.json
+.bob/artifacts/
+
+# IDE / OS
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+nemoclaw.log
+
+# K8s secrets
+k8s/secrets/
+
+# Docs build
+docs/_build/

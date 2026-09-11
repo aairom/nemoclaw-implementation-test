@@ -1,0 +1,140 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# NemoClaw Blueprint Manifest
+# Version: 0.1.0
+# This file defines the sandbox image, inference profiles, and compatibility constraints.
+
+version: "0.1.0"
+
+# Blueprint compatibility constraints
+compatibility:
+  min_openshell_version: "1.0.0"
+  min_nemoclaw_version: "0.1.0"
+  supported_agents:
+    - openclaw
+    - hermes
+    - langchain-deepagents-code
+
+# Sandbox container definition
+components:
+  sandbox:
+    # Name constraint: 1-63 lowercase letters, numbers, internal hyphens,
+    # starting with a letter and ending with a letter or number.
+    name: nemoclaw-sandbox
+    image: "ghcr.io/nvidia/nemoclaw/sandbox-base:latest"
+    health_check:
+      path: /health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+    # Security hardening (locked at sandbox creation)
+    security:
+      landlock: true                  # Filesystem access restriction
+      seccomp: true                   # System call filtering
+      netns: true                     # Network namespace isolation
+      capability_drops:               # Drop all capabilities
+        - ALL
+      capability_add: []              # Add none back
+      process_limit: 256
+      no_new_privileges: true
+      read_only_root: false           # /sandbox and /tmp writable; system paths read-only
+      read_only_paths:
+        - /usr
+        - /etc
+        - /bin
+        - /sbin
+        - /lib
+        - /lib64
+      writable_paths:
+        - /sandbox
+        - /tmp
+
+    # Resource limits
+    resources:
+      cpu_limit: "4"
+      memory_limit: "8Gi"
+      memory_request: "2Gi"
+
+  # Inference configuration
+  inference:
+    # The sandbox always talks to inference.local; real credentials stay in the gateway
+    endpoint: "http://inference.local"
+
+    # Inference profiles (provider_name constraint: 1-128 letters/numbers/dots/_/-)
+    profiles:
+      nvidia-nemotron:
+        provider_name: "nvidia"
+        label: "NVIDIA Nemotron"
+        base_url: "https://integrate.api.nvidia.com/v1"
+        default_model: "nvidia/llama-3.1-nemotron-70b-instruct"
+        supported_models:
+          - "nvidia/llama-3.1-nemotron-70b-instruct"
+          - "nvidia/llama-3.1-nemotron-ultra-253b-v1"
+          - "nvidia/nemotron-4-340b-instruct"
+          - "meta/llama-3.1-8b-instruct"
+          - "meta/llama-3.1-70b-instruct"
+
+      ollama-local:
+        provider_name: "ollama"
+        label: "Ollama (local)"
+        base_url: "http://localhost:11434"
+        default_model: "llama3.2"
+        supported_models:
+          - "llama3.2"
+          - "llama3.1"
+          - "mistral"
+          - "qwen2.5-coder"
+
+      openai-compatible:
+        provider_name: "openai-compatible"
+        label: "OpenAI-compatible (llama.cpp)"
+        base_url: "http://localhost:9931/v1"
+        default_model: "local-model"
+
+      model-router:
+        provider_name: "model-router"
+        label: "Model Router"
+        base_url: "http://inference.local"
+        default_model: "auto"
+        description: "Routes to a pool of configured NVIDIA models"
+
+  # Default network policy (applied at sandbox creation)
+  policy:
+    default_preset: "openclaw-sandbox"
+    hot_reload: true               # Network layer is hot-reloadable
+
+# Agent-specific integration manifests
+agents:
+  openclaw:
+    plugin: "nemoclaw/openclaw.plugin.json"
+    runtime: "nemoclaw/src/runtime-context.ts"
+    config_path: "/sandbox/.openclaw"
+    startup_command: "openclaw"
+
+  hermes:
+    config_path: "/sandbox/.hermes"
+    config_files:
+      - "config.yaml"
+      - ".env"
+    startup_command: "hermes"
+
+  langchain-deepagents-code:
+    config_path: "/sandbox/.deepagents"
+    config_files:
+      - "config.toml"
+    startup_command: "dcode"
+    terminal_runtime: true         # No long-running dashboard
+
+# Snapshot configuration (manifest-declared content captured on snapshot)
+snapshots:
+  include:
+    - /sandbox/.openclaw/config
+    - /sandbox/.hermes/config.yaml
+    - /sandbox/.deepagents/config.toml
+  exclude:
+    - "**/.env"
+    - "**/credentials*"
+    - "**/*.key"
+    - "**/*.pem"
