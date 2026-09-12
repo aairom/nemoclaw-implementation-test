@@ -66,6 +66,10 @@ npm link
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+# Run the offline sandbox demonstration and five test scenarios
+python3 scripts/nemoclaw_sandbox_demo.py --json
+python3 -m unittest discover -s test -p 'test_nemoclaw_sandbox.py' -v
 ```
 
 **One-shot alternative** (does all of the above):
@@ -141,6 +145,53 @@ On completion you will see:
   Dashboard:  http://localhost:10001
   Connect:    nemoclaw connect
 ```
+
+---
+
+## Step 5A: Validate the Sandbox Enforcement Scenarios
+
+The repository includes a dependency-free local harness that demonstrates the
+same policy concepts as the production sandbox without starting a container.
+It validates:
+
+- private workspace filesystem boundaries;
+- allowlisted `inference.local` network access;
+- agent capability enforcement;
+- memory, CPU, and wall-clock limits;
+- communication between registered agents; and
+- structured failures followed by sandbox teardown.
+
+Run it from the repository root:
+
+```bash
+python3 scripts/nemoclaw_sandbox_demo.py --json
+python3 -m unittest discover -s test -p 'test_nemoclaw_sandbox.py' -v
+```
+
+The five executable scenarios are defined in [`test/test_nemoclaw_sandbox.py`](../test/test_nemoclaw_sandbox.py), and the complete walkthrough is available in [`Docs/NemoClaw-Sandbox-User-Guide.md`](NemoClaw-Sandbox-User-Guide.md).
+
+> The local harness is a validation test double. Production isolation is provided by the OpenShell/NemoClaw container and gateway layers described in [`Docs/Architecture.md`](Architecture.md).
+
+---
+
+## Step 5A: Validate the Local Sandbox Demonstration
+
+The local demonstration exercises NemoClaw-style policy enforcement without
+starting Podman or contacting a model provider. It checks filesystem isolation,
+capability allowlists, `inference.local` network access, resource limits,
+in-sandbox agent communication, structured failures, audit events, and teardown.
+
+Run the standalone report and the five tests from the repository root:
+
+```bash
+python3 scripts/nemoclaw_sandbox_demo.py --json
+python3 -m unittest discover -s test -p 'test_nemoclaw_sandbox.py' -v
+```
+
+The complete scenario definitions and interpretation guidance are documented in
+[the sandbox user guide](NemoClaw-Sandbox-User-Guide.md).
+
+> This harness is a local validation test double. Production isolation is provided by the OpenShell/NemoClaw container and gateway layers used by `nemoclaw onboard`.
 
 ---
 

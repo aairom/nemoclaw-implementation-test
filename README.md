@@ -138,6 +138,7 @@ See [`Docs/Quickstart.md`](Docs/Quickstart.md) for detailed step-by-step instruc
 
 | Document | Description |
 |----------|-------------|
+| [Sandbox User Guide](Docs/NemoClaw-Sandbox-User-Guide.md) | Runnable sandbox demonstration, five test cases, and operations guide |
 | [Quickstart](Docs/Quickstart.md) | Step-by-step setup guide |
 | [Architecture](Docs/Architecture.md) | System architecture and component diagrams |
 | [CLI Reference](Docs/CLI-Reference.md) | Full nemoclaw command reference |
@@ -194,6 +195,40 @@ nemoclaw-test/
 make build-image
 make clean-images-all
 ```
+
+## Sandbox Demonstration
+
+The repository includes an offline-friendly sandbox implementation that validates
+NemoClaw-style enforcement without Podman, cloud inference, or API credentials.
+The implementation is provided by [`scripts/nemoclaw_sandbox_demo.py`](scripts/nemoclaw_sandbox_demo.py)
+and covers:
+
+- private workspace filesystem access and traversal protection;
+- agent capability allowlists;
+- `inference.local` network allowlisting;
+- memory, CPU, and wall-clock limits;
+- communication between registered sandbox agents;
+- structured policy failures and audit events; and
+- deterministic sandbox teardown.
+
+Run the demonstration and its five executable scenarios from the repository root:
+
+```bash
+python3 scripts/nemoclaw_sandbox_demo.py --json
+python3 -m unittest discover -s test -p 'test_nemoclaw_sandbox.py' -v
+```
+
+| Scenario | Validation |
+|----------|------------|
+| Normal execution | Authorized workspace write/read succeeds |
+| Boundary violation | Filesystem traversal and unapproved egress are denied |
+| Resource enforcement | Excess memory and long-running work are stopped |
+| Inter-agent communication | Registered agents exchange an in-sandbox message |
+| Failure and teardown | Errors are structured and temporary state is removed |
+
+The test implementation is in [`test/test_nemoclaw_sandbox.py`](test/test_nemoclaw_sandbox.py).
+See the complete setup, configuration, results, troubleshooting, and production guidance in
+[Docs/NemoClaw-Sandbox-User-Guide.md](Docs/NemoClaw-Sandbox-User-Guide.md).
 
 ## Development
 
