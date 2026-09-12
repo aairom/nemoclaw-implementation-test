@@ -267,6 +267,30 @@ nemoclaw destroy --yes
 
 ---
 
+## Remove Installed Project Dependencies
+
+The dependency cleanup script removes only project-local installations and recursively generated `__pycache__/` folders. It does not remove global npm packages, system Python installations, source files, configuration files, or `.env`.
+
+Preview the cleanup first:
+
+```bash
+./scripts/clean-dependencies.sh --dry-run
+```
+
+Remove the detected directories after explicit confirmation:
+
+```bash
+./scripts/clean-dependencies.sh --yes
+```
+
+The script targets `node_modules/`, `nemoclaw/node_modules/`, `.venv/`, `venv/`, and every `__pycache__/` directory below the project root, including its compiled Python files. The equivalent Make target is:
+
+```bash
+make clean-dependencies
+```
+
+---
+
 ## Podman Image Management
 
 ```bash

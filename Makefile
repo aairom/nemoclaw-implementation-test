@@ -3,7 +3,7 @@
 
 # NemoClaw Makefile
 
-.PHONY: install link build test test-all lint check format docs docs-live clean
+.PHONY: install link build test test-all lint check format docs docs-live clean clean-dependencies
 
 # ─── Install ──────────────────────────────────────────────────────────────────
 install:
@@ -114,4 +114,8 @@ help:
 	@echo "  make clean-images      Remove NemoClaw Podman images/containers"
 	@echo "  make clean-images-all  Full Podman reset (images + volumes)"
 	@echo "  make clean             Clean build artifacts"
+	@echo "  make clean-dependencies Remove node_modules and Python virtual environments"
 	@echo ""
+
+clean-dependencies:
+	./scripts/clean-dependencies.sh --yes

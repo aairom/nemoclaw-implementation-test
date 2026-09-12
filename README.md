@@ -167,7 +167,8 @@ nemoclaw-test/
 │   ├── stop.sh             # Stop dashboard gracefully
 │   ├── dev-setup.sh        # Full dev environment setup + npm link
 │   ├── podman-build.sh     # Build sandbox container image
-│   └── podman-clean.sh     # Remove images/containers (--all/--prune/--full)
+│   ├── podman-clean.sh     # Remove images/containers (--all/--prune/--full)
+│   └── clean-dependencies.sh # Remove project-local node_modules and Python venvs
 ├── test/                   # Vitest (ESM) + pytest test suites
 ├── Docs/                   # Project documentation
 ├── k8s/                    # Kubernetes manifests
@@ -229,6 +230,31 @@ python3 -m unittest discover -s test -p 'test_nemoclaw_sandbox.py' -v
 The test implementation is in [`test/test_nemoclaw_sandbox.py`](test/test_nemoclaw_sandbox.py).
 See the complete setup, configuration, results, troubleshooting, and production guidance in
 [Docs/NemoClaw-Sandbox-User-Guide.md](Docs/NemoClaw-Sandbox-User-Guide.md).
+
+## Remove Installed Project Dependencies
+
+To remove this project's installed Node.js dependencies, Python virtual environments, and recursively generated `__pycache__/` folders:
+
+```bash
+# Preview the directories that would be removed
+./scripts/clean-dependencies.sh --dry-run
+
+# Confirm removal
+./scripts/clean-dependencies.sh --yes
+
+# Equivalent Make target
+make clean-dependencies
+```
+
+The cleanup script removes only these project-local directories when present:
+
+- `node_modules/`
+- `nemoclaw/node_modules/`
+- `.venv/`
+- `venv/`
+- every `__pycache__/` directory below the project root, including its compiled Python files
+
+It does not remove global npm packages, system Python installations, source files, configuration files, or `.env`.
 
 ## Development
 
